@@ -10,8 +10,10 @@ window.onload = () => {
     mode: "stickyTop",
   })
 
-  var move = false
-  var out = 0
+  let move = false
+  let out = 0
+  let loaded = false
+  let sliderItemLeft = 0
   fail2IdentifyingCode()
 
   const layer = scene.layer()
@@ -31,35 +33,39 @@ window.onload = () => {
     mode: "stickyTop",
     padding: 0,
   })
-  const layer2 = scene2.layer()
+  const sliderItemLayer = scene2.layer()
 
-  const s1 = new Sprite({
+  const sliderBg = new Sprite({
     anchor: [0, 0.5],
     pos: [14, 60],
     texture: "https://img.meek3n.cn/slice.png",
   })
 
-  layer2.append(s1)
+  sliderItemLayer.append(sliderBg)
+
+  loaded = true
 
   let item = document.querySelector("#slider-item")
   let sliderContainer = document.querySelector(".slider")
 
   item.onmousedown = function (ev) {
     move = true
-    out = ev.offsetX
+    out = ev.pageX * 1
     item.style.transition = "unset"
 
     sliderContainer.onmousemove = function (e) {
       if (move) {
-        let left = e.clientX - out
-        if (left > 198) left = 198
-        if (left < 13) left = 13
-        item.style.left = left + "px"
-        s1.attr("x", left - 2)
+        sliderItemLeft = e.pageX - out // - document.querySelector(".slider").offsetLeft
+        if (sliderItemLeft > 194) sliderItemLeft = 194
+        if (sliderItemLeft < 13) sliderItemLeft = 13
+
+        item.style.transform = `translateX(${sliderItemLeft + "px"})`
+        sliderBg.attr("x", sliderItemLeft - 2)
       }
       document.onmouseup = function () {
         move = false
         out = 0
+        lastLeft = item.offsetLeft
         fail2IdentifyingCode()
       }
     }
@@ -68,14 +74,15 @@ window.onload = () => {
   item.ontouchstart = function (ev) {
     move = true
     item.style.transition = "unset"
+    out = ev.touches[0].pageX
 
     sliderContainer.ontouchmove = function (e) {
       if (move) {
-        let left = e.touches[0].clientX
-        if (left > 198) left = 198
-        if (left < 13) left = 13
-        item.style.left = left + "px"
-        s1.attr("x", left - 2)
+        sliderItemLeft = e.touches[0].pageX - out
+        if (sliderItemLeft > 194) sliderItemLeft = 194
+        if (sliderItemLeft < 13) sliderItemLeft = 13
+        item.style.transform = `translateX(${sliderItemLeft + "px"})`
+        sliderBg.attr("x", sliderItemLeft - 2)
       }
       document.ontouchend = function () {
         move = false
@@ -85,20 +92,22 @@ window.onload = () => {
     }
   }
 
-  s1.addEventListener("mousedown", function (e) {
+  sliderBg.addEventListener("mousedown", function (e) {
     move = true
     out = e.originalX
     item.style.transition = "unset"
 
-    layer2.addEventListener("mousemove", function (ev) {
+    sliderItemLayer.addEventListener("mousemove", function (ev) {
       if (move) {
-        let left = ev.originalX - 25
-        if (left > 198) left = 198
-        if (left < 13) left = 13
-        s1.attr("x", left)
-        document.querySelector("#slider-item").style.left = left + 2 + "px"
+        sliderItemLeft = ev.originalX - 25
+        if (sliderItemLeft > 194) sliderItemLeft = 194
+        if (sliderItemLeft < 13) sliderItemLeft = 13
+        sliderBg.attr("x", sliderItemLeft)
+        document.querySelector("#slider-item").style.transform = `translateX(${
+          sliderItemLeft + 2 + "px"
+        })`
       }
-      layer2.addEventListener("mouseup", function () {
+      sliderItemLayer.addEventListener("mouseup", function () {
         move = false
         out = 0
         fail2IdentifyingCode()
@@ -106,20 +115,22 @@ window.onload = () => {
     })
   })
 
-  s1.addEventListener("touchstart", function (e) {
+  sliderBg.addEventListener("touchstart", function (e) {
     move = true
     out = e.originalX
     item.style.transition = "unset"
 
-    layer2.addEventListener("touchmove", function (ev) {
+    sliderItemLayer.addEventListener("touchmove", function (ev) {
       if (move) {
-        let left = ev.originalX - 25
-        if (left > 198) left = 198
-        if (left < 13) left = 13
-        s1.attr("x", left)
-        document.querySelector("#slider-item").style.left = left + 2 + "px"
+        sliderItemLeft = ev.originalX - 25
+        if (sliderItemLeft > 194) sliderItemLeft = 194
+        if (sliderItemLeft < 13) sliderItemLeft = 13
+        sliderBg.attr("x", sliderItemLeft)
+        document.querySelector("#slider-item").style.transform = `translateX(${
+          sliderItemLeft + 2 + "px"
+        })`
       }
-      layer2.addEventListener("touchend", function () {
+      sliderItemLayer.addEventListener("touchend", function () {
         move = false
         out = 0
         fail2IdentifyingCode()
@@ -128,12 +139,14 @@ window.onload = () => {
   })
 
   async function fail2IdentifyingCode() {
-    move = false
-    let item = document.querySelector("#slider-item")
-    item.style.left = "15px"
-    item.style.transition = "all .3s linear"
-    await s1.transition(0.3).attr({
-      x: 15,
-    })
+    if (loaded) {
+      move = false
+      let item = document.querySelector("#slider-item")
+      item.style.transition = "all .3s linear"
+      item.style.transform = "translateX(10px)"
+      await sliderBg.transition(0.3).attr({
+        x: 10,
+      })
+    }
   }
 }
