@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#container,
+#code {
+  width: 260px;
+  height: 160px;
+}
+
+#code {
+  z-index: 9;
+  position: fixed;
+  margin-top: -157px;
+  cursor: pointer;
+}
+
+.slider {
+  width: 260px;
+  height: 61px;
+  background-color: #f3f3f3;
+  padding: 3px 0;
+}
+
+#slider-item {
+  width: 55px;
+  height: 55px;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.158);
+  cursor: pointer;
+  position: absolute;
+  left: 15px;
+}
+
+#slider-item:active {
+  background-color: #eee;
+}
