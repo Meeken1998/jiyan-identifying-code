@@ -16,6 +16,7 @@ body {
 .jiyan {
   padding: 11px;
   background-color: #fff;
+  user-select: none;
 }
 
 #container,
