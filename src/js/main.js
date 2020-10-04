@@ -59,6 +59,23 @@ window.onload = () => {
     }
   }
 
+  item.ontouchstart = function (ev) {
+    move = true
+    sliderContainer.ontouchmove = function (e) {
+      if (move) {
+        let left = e.touches[0].clientX
+        if (left > 198) left = 198
+        if (left < 13) left = 13
+        item.style.left = left + "px"
+        s1.attr("x", left - 2)
+      }
+      document.ontouchend = function () {
+        move = false
+        out = 0
+      }
+    }
+  }
+
   s1.addEventListener("mousedown", function (e) {
     move = true
     out = e.originalX
@@ -71,6 +88,24 @@ window.onload = () => {
         document.querySelector("#slider-item").style.left = left + 2 + "px"
       }
       layer2.addEventListener("mouseup", function () {
+        move = false
+        out = 0
+      })
+    })
+  })
+
+  s1.addEventListener("touchstart", function (e) {
+    move = true
+    out = e.originalX
+    layer2.addEventListener("touchmove", function (ev) {
+      if (move) {
+        let left = ev.originalX - 25
+        if (left > 198) left = 198
+        if (left < 13) left = 13
+        s1.attr("x", left)
+        document.querySelector("#slider-item").style.left = left + 2 + "px"
+      }
+      layer2.addEventListener("touchend", function () {
         move = false
         out = 0
       })
