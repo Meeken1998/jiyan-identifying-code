@@ -65,12 +65,13 @@ window.onload = () => {
         sliderBg.attr("x", sliderItemLeft - 2)
       }
       document.onmouseup = function () {
+        move &&
+          showToast().then((res) => {
+            res && fail2IdentifyingCode()
+          })
         move = false
         out = 0
         lastLeft = item.offsetLeft
-        showToast().then((res) => {
-          res && fail2IdentifyingCode()
-        })
       }
     }
   }
@@ -90,11 +91,12 @@ window.onload = () => {
         sliderBg.attr("x", sliderItemLeft - 2)
       }
       document.ontouchend = function () {
+        move &&
+          showToast().then((res) => {
+            res && fail2IdentifyingCode()
+          })
         move = false
         out = 0
-        showToast().then((res) => {
-          res && fail2IdentifyingCode()
-        })
       }
     }
   }
@@ -117,11 +119,12 @@ window.onload = () => {
         })`
       }
       sliderItemLayer.addEventListener("mouseup", function () {
+        move &&
+          showToast().then((res) => {
+            res && fail2IdentifyingCode()
+          })
         move = false
         out = 0
-        showToast().then((res) => {
-          res && fail2IdentifyingCode()
-        })
       })
     })
   })
@@ -144,11 +147,12 @@ window.onload = () => {
         })`
       }
       sliderItemLayer.addEventListener("touchend", function () {
+        move &&
+          showToast().then((res) => {
+            res && fail2IdentifyingCode()
+          })
         move = false
         out = 0
-        showToast().then((res) => {
-          res && fail2IdentifyingCode()
-        })
       })
     })
   })
