@@ -28,8 +28,16 @@ body {
 #code {
   z-index: 9;
   position: fixed;
-  margin-top: -157px;
+  margin-top: -160px;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+#tips-bar {
+  position: absolute;
 }
 
 .slider {
@@ -52,4 +60,53 @@ body {
 
 #slider-item:active {
   background-color: #eee;
+}
+
+.jiyan-code-tips {
+  width: 260px;
+  background-image: linear-gradient(102deg, #63a9fc 17%, #2f66c6);
+  color: #fff;
+  font-size: 14px;
+  padding: 6px 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  animation-fill-mode: forwards;
+}
+
+.jiyan-code-tips.in {
+  animation: fadeInUp 0.3s ease-in;
+}
+
+.jiyan-code-tips.out {
+  animation: fadeOutDown 0.3s ease-in;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeOutDown {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+    display: none;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    -ms-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: none;
+    -ms-transform: none;
+    transform: none;
+  }
 }

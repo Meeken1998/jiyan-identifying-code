@@ -1,5 +1,5 @@
 window.onload = () => {
-  const { Scene, Sprite } = spritejs
+  const { Scene, Sprite, Label } = spritejs
 
   const container = document.querySelector("#container")
   const scene = new Scene({
@@ -13,6 +13,7 @@ window.onload = () => {
   let move = false
   let out = 0
   let loaded = false
+  let canMove = true
   let sliderItemLeft = 0
   fail2IdentifyingCode()
 
@@ -37,7 +38,7 @@ window.onload = () => {
 
   const sliderBg = new Sprite({
     anchor: [0, 0.5],
-    pos: [14, 60],
+    pos: [14, 63],
     texture: "https://img.meek3n.cn/slice.png",
   })
 
@@ -54,10 +55,11 @@ window.onload = () => {
     item.style.transition = "unset"
 
     sliderContainer.onmousemove = function (e) {
-      if (move) {
+      if (canMove && move) {
         sliderItemLeft = e.pageX - out // - document.querySelector(".slider").offsetLeft
         if (sliderItemLeft > 194) sliderItemLeft = 194
         if (sliderItemLeft < 13) sliderItemLeft = 13
+        console.log(sliderItemLeft)
 
         item.style.transform = `translateX(${sliderItemLeft + "px"})`
         sliderBg.attr("x", sliderItemLeft - 2)
@@ -66,7 +68,9 @@ window.onload = () => {
         move = false
         out = 0
         lastLeft = item.offsetLeft
-        fail2IdentifyingCode()
+        showToast().then(() => {
+          fail2IdentifyingCode()
+        })
       }
     }
   }
@@ -77,17 +81,20 @@ window.onload = () => {
     out = ev.touches[0].pageX
 
     sliderContainer.ontouchmove = function (e) {
-      if (move) {
+      if (canMove && move) {
         sliderItemLeft = e.touches[0].pageX - out
         if (sliderItemLeft > 194) sliderItemLeft = 194
         if (sliderItemLeft < 13) sliderItemLeft = 13
+        console.log(sliderItemLeft)
         item.style.transform = `translateX(${sliderItemLeft + "px"})`
         sliderBg.attr("x", sliderItemLeft - 2)
       }
       document.ontouchend = function () {
         move = false
         out = 0
-        fail2IdentifyingCode()
+        showToast().then(() => {
+          fail2IdentifyingCode()
+        })
       }
     }
   }
@@ -98,11 +105,13 @@ window.onload = () => {
     item.style.transition = "unset"
 
     sliderItemLayer.addEventListener("mousemove", function (ev) {
-      if (move) {
+      if (canMove && move) {
         sliderItemLeft = ev.originalX - 25
         if (sliderItemLeft > 194) sliderItemLeft = 194
         if (sliderItemLeft < 13) sliderItemLeft = 13
         sliderBg.attr("x", sliderItemLeft)
+        console.log(sliderItemLeft)
+
         document.querySelector("#slider-item").style.transform = `translateX(${
           sliderItemLeft + 2 + "px"
         })`
@@ -110,7 +119,9 @@ window.onload = () => {
       sliderItemLayer.addEventListener("mouseup", function () {
         move = false
         out = 0
-        fail2IdentifyingCode()
+        showToast().then(() => {
+          fail2IdentifyingCode()
+        })
       })
     })
   })
@@ -121,11 +132,13 @@ window.onload = () => {
     item.style.transition = "unset"
 
     sliderItemLayer.addEventListener("touchmove", function (ev) {
-      if (move) {
+      if (canMove && move) {
         sliderItemLeft = ev.originalX - 25
         if (sliderItemLeft > 194) sliderItemLeft = 194
         if (sliderItemLeft < 13) sliderItemLeft = 13
         sliderBg.attr("x", sliderItemLeft)
+        console.log(sliderItemLeft)
+
         document.querySelector("#slider-item").style.transform = `translateX(${
           sliderItemLeft + 2 + "px"
         })`
@@ -133,7 +146,9 @@ window.onload = () => {
       sliderItemLayer.addEventListener("touchend", function () {
         move = false
         out = 0
-        fail2IdentifyingCode()
+        showToast().then(() => {
+          fail2IdentifyingCode()
+        })
       })
     })
   })
@@ -141,12 +156,28 @@ window.onload = () => {
   async function fail2IdentifyingCode() {
     if (loaded) {
       move = false
+      canMove = false
       let item = document.querySelector("#slider-item")
       item.style.transition = "all .3s linear"
       item.style.transform = "translateX(10px)"
       await sliderBg.transition(0.3).attr({
         x: 10,
       })
+      canMove = true
     }
+  }
+
+  function showToast() {
+    if (!canMove) return
+    return new Promise((resolve) => {
+      canMove = false
+      let tipsBar = document.getElementById("tips-bar")
+      tipsBar.innerHTML = `<div class="jiyan-code-tips in">请正确拼合图像</div>`
+      setTimeout(() => {
+        tipsBar.innerHTML = `<div class="jiyan-code-tips out">请正确拼合图像</div>`
+        canMove = true
+        resolve(true)
+      }, 1000)
+    })
   }
 }
