@@ -68,8 +68,8 @@ window.onload = () => {
         move = false
         out = 0
         lastLeft = item.offsetLeft
-        showToast().then(() => {
-          fail2IdentifyingCode()
+        showToast().then((res) => {
+          res && fail2IdentifyingCode()
         })
       }
     }
@@ -92,8 +92,8 @@ window.onload = () => {
       document.ontouchend = function () {
         move = false
         out = 0
-        showToast().then(() => {
-          fail2IdentifyingCode()
+        showToast().then((res) => {
+          res && fail2IdentifyingCode()
         })
       }
     }
@@ -119,8 +119,8 @@ window.onload = () => {
       sliderItemLayer.addEventListener("mouseup", function () {
         move = false
         out = 0
-        showToast().then(() => {
-          fail2IdentifyingCode()
+        showToast().then((res) => {
+          res && fail2IdentifyingCode()
         })
       })
     })
@@ -146,8 +146,8 @@ window.onload = () => {
       sliderItemLayer.addEventListener("touchend", function () {
         move = false
         out = 0
-        showToast().then(() => {
-          fail2IdentifyingCode()
+        showToast().then((res) => {
+          res && fail2IdentifyingCode()
         })
       })
     })
@@ -168,7 +168,7 @@ window.onload = () => {
   }
 
   function showToast() {
-    if (!canMove) return
+    if (!canMove) return new Promise((resolve) => resolve(false))
     return new Promise((resolve) => {
       canMove = false
       let tipsBar = document.getElementById("tips-bar")
