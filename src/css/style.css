@@ -75,6 +75,10 @@ body {
   animation-fill-mode: forwards;
 }
 
+.jiyan-code-tips.success {
+  background-image: linear-gradient(102deg, #3cba92 17%, #0ba360);
+}
+
 .jiyan-code-tips.in {
   animation: fadeInUp 0.3s ease-in;
 }

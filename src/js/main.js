@@ -15,6 +15,8 @@ window.onload = () => {
   let loaded = false
   let canMove = true
   let sliderItemLeft = 0
+  let startTime = 0
+  let endTime = 0
   fail2IdentifyingCode()
 
   const layer = scene.layer()
@@ -53,22 +55,20 @@ window.onload = () => {
     move = true
     out = ev.pageX * 1
     item.style.transition = "unset"
+    setStartTime()
 
     sliderContainer.onmousemove = function (e) {
       if (canMove && move) {
         sliderItemLeft = e.pageX - out // - document.querySelector(".slider").offsetLeft
         if (sliderItemLeft > 194) sliderItemLeft = 194
         if (sliderItemLeft < 13) sliderItemLeft = 13
-        console.log(sliderItemLeft)
 
         item.style.transform = `translateX(${sliderItemLeft + "px"})`
         sliderBg.attr("x", sliderItemLeft - 2)
       }
       document.onmouseup = function () {
-        move &&
-          showToast().then((res) => {
-            res && fail2IdentifyingCode()
-          })
+        setEndTime()
+        move && check(sliderItemLeft)
         move = false
         out = 0
         lastLeft = item.offsetLeft
@@ -80,6 +80,7 @@ window.onload = () => {
     move = true
     item.style.transition = "unset"
     out = ev.touches[0].pageX
+    setStartTime()
 
     sliderContainer.ontouchmove = function (e) {
       if (canMove && move) {
@@ -91,10 +92,8 @@ window.onload = () => {
         sliderBg.attr("x", sliderItemLeft - 2)
       }
       document.ontouchend = function () {
-        move &&
-          showToast().then((res) => {
-            res && fail2IdentifyingCode()
-          })
+        setEndTime()
+        move && check(sliderItemLeft)
         move = false
         out = 0
       }
@@ -105,6 +104,7 @@ window.onload = () => {
     move = true
     out = e.originalX
     item.style.transition = "unset"
+    setStartTime()
 
     sliderItemLayer.addEventListener("mousemove", function (ev) {
       if (canMove && move) {
@@ -119,10 +119,8 @@ window.onload = () => {
         })`
       }
       sliderItemLayer.addEventListener("mouseup", function () {
-        move &&
-          showToast().then((res) => {
-            res && fail2IdentifyingCode()
-          })
+        setEndTime()
+        move && check(sliderItemLeft)
         move = false
         out = 0
       })
@@ -133,6 +131,7 @@ window.onload = () => {
     move = true
     out = e.originalX
     item.style.transition = "unset"
+    setStartTime()
 
     sliderItemLayer.addEventListener("touchmove", function (ev) {
       if (canMove && move) {
@@ -147,10 +146,8 @@ window.onload = () => {
         })`
       }
       sliderItemLayer.addEventListener("touchend", function () {
-        move &&
-          showToast().then((res) => {
-            res && fail2IdentifyingCode()
-          })
+        setEndTime()
+        move && check(sliderItemLeft)
         move = false
         out = 0
       })
@@ -183,5 +180,44 @@ window.onload = () => {
         resolve(true)
       }, 1000)
     })
+  }
+
+  function showSuccessToast() {
+    if (!canMove) return new Promise((resolve) => resolve(false))
+    return new Promise((resolve) => {
+      canMove = false
+      let tipsBar = document.getElementById("tips-bar")
+      let timespan = getTimeSpan()
+      tipsBar.innerHTML = `<div class="jiyan-code-tips success in">真棒，${timespan} 秒内拼完</div>`
+      setTimeout(() => {
+        tipsBar.innerHTML = `<div class="jiyan-code-tips success out">真棒，${timespan} 秒内拼完</div>`
+        canMove = true
+        resolve(true)
+      }, 1000)
+    })
+  }
+
+  function setStartTime() {
+    startTime = Date.now()
+  }
+
+  function setEndTime() {
+    endTime = Date.now()
+  }
+
+  function getTimeSpan() {
+    return parseInt((endTime - startTime) / 100) / 10
+  }
+
+  function check(distance) {
+    if (Math.abs(distance - 63) < 4) {
+      showSuccessToast().then((res) => {
+        res && fail2IdentifyingCode()
+      })
+    } else {
+      showToast().then((res) => {
+        res && fail2IdentifyingCode()
+      })
+    }
   }
 }
