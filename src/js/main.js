@@ -210,7 +210,7 @@ window.onload = () => {
   }
 
   function check(distance) {
-    if (Math.abs(distance - 63) < 4) {
+    if (Math.abs(distance - 64) < 5) {
       showSuccessToast().then((res) => {
         res && fail2IdentifyingCode()
       })
