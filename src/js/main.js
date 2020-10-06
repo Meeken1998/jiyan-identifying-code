@@ -168,14 +168,18 @@ window.onload = () => {
     }
   }
 
-  function showToast() {
+  function showToast(content) {
     if (!canMove) return new Promise((resolve) => resolve(false))
     return new Promise((resolve) => {
       canMove = false
       let tipsBar = document.getElementById("tips-bar")
-      tipsBar.innerHTML = `<div class="jiyan-code-tips in">请正确拼合图像</div>`
+      tipsBar.innerHTML = `<div class="jiyan-code-tips in">${
+        content || "请正确拼合图像"
+      }</div>`
       setTimeout(() => {
-        tipsBar.innerHTML = `<div class="jiyan-code-tips out">请正确拼合图像</div>`
+        tipsBar.innerHTML = `<div class="jiyan-code-tips out">${
+          content || "请正确拼合图像"
+        }</div>`
         canMove = true
         resolve(true)
       }, 1000)
@@ -210,6 +214,13 @@ window.onload = () => {
   }
 
   function check(distance) {
+    let timespan = getTimeSpan()
+    if (timespan * 1 < 0.3) {
+      showToast("时间间隔过短，请重试").then((res) => {
+        res && fail2IdentifyingCode()
+      })
+      return
+    }
     if (Math.abs(distance - 64) < 5) {
       showSuccessToast().then((res) => {
         res && fail2IdentifyingCode()
