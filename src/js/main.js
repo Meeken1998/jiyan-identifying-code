@@ -22,7 +22,7 @@ window.onload = () => {
   const layer = scene.layer()
 
   const robot = new Sprite({
-    texture: "/src/img/code-bg.png",
+    texture: "https://s2.loli.net/2021/12/21/3mb1FoJfYDOMNK6.png",
   })
 
   layer.append(robot)
@@ -41,7 +41,7 @@ window.onload = () => {
   const sliderBg = new Sprite({
     anchor: [0, 0.5],
     pos: [14, 63],
-    texture: "/src/img/slice.png",
+    texture: "https://s2.loli.net/2021/12/21/aAJMWvXn3KP7V9Z.png",
   })
 
   sliderItemLayer.append(sliderBg)
